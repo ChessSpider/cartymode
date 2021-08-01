@@ -114,13 +114,15 @@ class Song(object):
                 LOG.debug(f"Skipping {ta} because requested song offset = {offset}")
                 skipped = True
                 continue
-            if skipped:
+            if skipped and ta.time > dt_offset:
+                print(ta.time)
+                print(dt_offset)
                 # We skipped some TimedActions.. we have to sync
                 sleepfor = ta - actionlist[i - 1]
                 LOG.debug("SYNCING...Sleeping for %f" % sleepfor.total_seconds())
                 time.sleep(sleepfor.total_seconds())
-                skipped = False
                 LOG.debug("SYNCED!")
+            skipped = False
             # print(ta)
             ta()
             try:
