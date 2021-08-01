@@ -92,5 +92,19 @@ class unite(Song):
                 action_on=self.car.turnallthelightson,
                 action_off=self.car.turnallthelightsoff,
             ),
+            {
+                "00:44.500": self.car.turnallthelightson,
+                "00:44.700": self.car.turnallthelightsoff,
+                "00:46.000": self.car.turnallthelightson,
+                "00:46.200": self.car.turnallthelightsoff,
+                "00:47.600": self.car.turnallthelightson,
+                "00:47.800": self.car.turnallthelightsoff,
+                "00:49.300": self.car.turnallthelightson,
+                "00:49.500": self.car.turnallthelightsoff,
+                "00:50.800": self.car.turnallthelightson,
+                "00:51.000": self.car.turnallthelightsoff,
+                "00:52.300": self.car.turnallthelightson,
+                "00:52.500": self.car.turnallthelightsoff,
+            },
         ]
         return actions

@@ -144,7 +144,7 @@ def signal_handler(sig, frame):
 
 signal.signal(signal.SIGINT, signal_handler)
 
-song_offset = "00:10.200"
+song_offset = "00:35.150"
 
 foobar = datetime.datetime.now()
 offset_minutes, offset_seconds = song_offset.split(":")

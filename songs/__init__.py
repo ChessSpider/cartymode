@@ -121,7 +121,7 @@ class Song(object):
                 continue
             if skipped and ta.time != dt_offset:
                 raise Exception(
-                    "Please skip to an exact TimedAction. Next TA: {ta}. Your offset: {offset}"
+                    f"Please skip to an exact TimedAction. Next TA: {ta}. Your offset: {offset}"
                 )
             skipped = False
             LOG.debug(ta)
