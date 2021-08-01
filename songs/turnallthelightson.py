@@ -133,7 +133,7 @@ class turnallthelightson(Song):
             self.timeseries(  # Turn all the lights on!
                 "00:46.250",
                 duration_on=pd.Timedelta(milliseconds=250),
-                interval=pd.Timedelta(milliseconds=500),
+                interval=pd.Timedelta(milliseconds=450),
                 periods=6,
                 action_on=self.car.turnallthelightson,
                 action_off=self.car.turnallthelightsoff,
@@ -141,34 +141,36 @@ class turnallthelightson(Song):
             self.timeseries(  # ooaah
                 "00:50.000",
                 duration_on=pd.Timedelta(milliseconds=250),
-                interval=pd.Timedelta(milliseconds=500),
-                periods=5,
+                interval=pd.Timedelta(milliseconds=450),
+                periods=6,
                 action_on=self.car.turnallthelightson,
                 action_off=self.car.turnallthelightsoff,
             ),
             self.timeseries(  # Turn all the lights on!
                 "00:53.600",
                 duration_on=pd.Timedelta(milliseconds=250),
-                interval=pd.Timedelta(milliseconds=500),
-                periods=5,
+                interval=pd.Timedelta(milliseconds=450),
+                periods=6,
                 action_on=self.car.turnallthelightson,
                 action_off=self.car.turnallthelightsoff,
             ),
             self.timeseries(  # ah ha!
                 "00:57.250",
                 duration_on=pd.Timedelta(milliseconds=250),
-                interval=pd.Timedelta(milliseconds=500),
+                interval=pd.Timedelta(milliseconds=450),
                 periods=2,
                 action_on=self.car.turnallthelightson,
                 action_off=self.car.turnallthelightsoff,
             ),
             {
-                "00:58.300": self.car.turnallthelightson,
-                "01:01.500": self.car.turnallthelightsoff,
-                "01:03.750": self.car.turnallthelightson,
-                "01:05.350": self.car.turnallthelightsoff,
-                "01:07.500": self.car.turnallthelightson,
-                "01:10.000": self.car.turnallthelightsoff,
+                "01:01.500": self.car.highbeam.turnon,  # puts your hand if youre going haaaard
+                "01:03.750": self.car.highbeam.turnoff,
+                "01:05.350": self.car.highbeam.turnon,  # i need some light its way too dark
+                "01:07.500": self.car.highbeam.turnoff,
+                "01:09.000": self.car.highbeam.turnon,  # okay im going i-i-n
+                "01:11.250": self.car.highbeam.turnoff,
+                "01:15.500": self.car.turnallthelightson,  # TURN ALL THE LIGHTS ON
+                "01:16.500": self.car.turnallthelightsoff,
             },
         ]
         return actions

@@ -1,4 +1,6 @@
+from pandas._libs.tslibs.timedeltas import Timedelta
 from . import TimedAction, Song
+import pandas as pd
 
 
 class caramelldansen(Song):
@@ -32,8 +34,8 @@ class caramelldansen(Song):
             },
             self.timeseries(
                 "00:31.100",
-                duration_on="100ms",
-                interval="300ms",
+                duration_on=pd.Timedelta("100ms"),
+                interval=pd.Timedelta("300ms"),
                 periods=20,
                 action_on=self.car.highbeam.turnon,
                 action_off=self.car.highbeam.turnoff,
