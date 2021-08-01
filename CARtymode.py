@@ -144,7 +144,7 @@ def signal_handler(sig, frame):
 
 signal.signal(signal.SIGINT, signal_handler)
 
-song_offset = "00:57.250"
+song_offset = "00:22.200"
 
 foobar = datetime.datetime.now()
 offset_minutes, offset_seconds = song_offset.split(":")
@@ -179,7 +179,7 @@ while started:
     printtimestamp()
     LOG.info("Waiting song to finish")
     lightshow.join()
-    time.sleep(9)
+    time.sleep(3)
     started = False
 
 LOG.info("Stopping the car")
