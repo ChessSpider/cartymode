@@ -4,6 +4,8 @@ import threading
 import pandas as pd
 import logging
 
+from pandas._libs.tslibs.timedeltas import Timedelta
+
 LOG = logging.getLogger(__name__)
 
 
@@ -63,17 +65,20 @@ class Song(object):
     def timeseries(
         self,
         starttime="00:00.000",
-        duration_on="300ms",
-        interval="600ms",
+        *,
+        duration_on: pd.Timedelta,
+        interval: pd.Timedelta,
         periods=3,
         action_on=None,
         action_off=None,
     ):
+        if interval < duration_on:
+            raise Exception("duration_on must be larger than interval")
         starttime = pd.Timestamp("00:" + starttime)
 
         pr_on = pd.period_range(starttime, periods=periods, freq=interval)
         pr_off = pd.period_range(
-            starttime + pd.Timedelta(duration_on), periods=periods, freq=interval
+            starttime + duration_on, periods=periods, freq=interval
         )
 
         periods = {}
@@ -114,16 +119,12 @@ class Song(object):
                 LOG.debug(f"Skipping {ta} because requested song offset = {offset}")
                 skipped = True
                 continue
-            if skipped and ta.time > dt_offset:
-                print(ta.time)
-                print(dt_offset)
-                # We skipped some TimedActions.. we have to sync
-                sleepfor = ta - actionlist[i - 1]
-                LOG.debug("SYNCING...Sleeping for %f" % sleepfor.total_seconds())
-                time.sleep(sleepfor.total_seconds())
-                LOG.debug("SYNCED!")
+            if skipped and ta.time != dt_offset:
+                raise Exception(
+                    "Please skip to an exact TimedAction. Next TA: {ta}. Your offset: {offset}"
+                )
             skipped = False
-            # print(ta)
+            LOG.debug(ta)
             ta()
             try:
                 sleepfor = actionlist[i + 1] - ta
