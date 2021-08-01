@@ -25,6 +25,7 @@ logging.basicConfig(level=logging.INFO)
 from songs import Song
 from songs.turnallthelightson import turnallthelightson
 from songs.caramelldansen import caramelldansen
+from songs.unite import unite
 
 from cars import Car
 from cars.corsa import corsa
@@ -143,7 +144,7 @@ def signal_handler(sig, frame):
 
 signal.signal(signal.SIGINT, signal_handler)
 
-song_offset = "00:46.250"
+song_offset = "00:10.200"
 
 foobar = datetime.datetime.now()
 offset_minutes, offset_seconds = song_offset.split(":")
@@ -178,7 +179,7 @@ while started:
     printtimestamp()
     LOG.info("Waiting song to finish")
     lightshow.join()
-    time.sleep(10)
+    time.sleep(8)
     started = False
 
 LOG.info("Stopping the car")
