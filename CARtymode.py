@@ -102,7 +102,7 @@ except Exception as ex:
     token = cached_token
 
 
-LOG.info("Used spotify token: {token}".format(token=token))
+LOG.debug("Used spotify token: {token}".format(token=token))
 
 sp = None
 while sp is None:
@@ -143,13 +143,21 @@ def signal_handler(sig, frame):
 
 signal.signal(signal.SIGINT, signal_handler)
 
+song_offset = "00:35.00"
 
 foobar = datetime.datetime.now()
+offset_minutes, offset_seconds = song_offset.split(":")
+
+song_offset_td = datetime.timedelta(
+    minutes=int(offset_minutes), seconds=float(offset_seconds)
+)
 
 
 def printtimestamp():
     global foobar
-    time_passed = datetime.datetime.now() - foobar
+    global song_offset_td
+
+    time_passed = (datetime.datetime.now() - foobar) + song_offset_td
 
     minutes, seconds = divmod(time_passed.total_seconds(), 60)
     LOG.info(
@@ -165,7 +173,7 @@ if args.watch_keyboard:
 
 car.start()
 while started:
-    lightshow = song.start(sp, target_device, offset="00:10.300")
+    lightshow = song.start(sp, target_device, offset=song_offset)
     foobar = datetime.datetime.now()
     LOG.info("Waiting song to finish")
     lightshow.join()
