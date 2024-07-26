@@ -29,6 +29,7 @@ from songs.unite import unite
 
 from cars import Car
 from cars.corsa import corsa
+from cars.kiacarens import kiacarens
 from cars.corsastub import corsastub
 
 logging.getLogger(__name__).setLevel(logging.DEBUG)
