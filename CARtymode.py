@@ -26,11 +26,13 @@ from songs import Song
 from songs.turnallthelightson import turnallthelightson
 from songs.caramelldansen import caramelldansen
 from songs.unite import unite
+from songs.europapa import europapa
 
 from cars import Car
 from cars.corsa import corsa
 from cars.kiacarens import kiacarens
 from cars.corsastub import corsastub
+from cars.nullcar import nullcar
 
 logging.getLogger(__name__).setLevel(logging.DEBUG)
 logging.getLogger("songs").setLevel(logging.DEBUG)
