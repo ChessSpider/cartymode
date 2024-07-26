@@ -1,4 +1,0 @@
-python-can
-pyserial
-keyboard
-pandas

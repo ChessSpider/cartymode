@@ -1,0 +1,19 @@
+[tool.poetry]
+name = "cartymode"
+version = "0.1.0"
+description = ""
+authors = ["Your Name <you@example.com>"]
+readme = "README.md"
+
+[tool.poetry.dependencies]
+python = "^3.10"
+python-can = "^4.4.2"
+pyserial = "^3.5"
+keyboard = "^0.13.5"
+spotipy = "^2.24.0"
+pandas = "^2.2.2"
+
+
+[build-system]
+requires = ["poetry-core"]
+build-backend = "poetry.core.masonry.api"
