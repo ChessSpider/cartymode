@@ -46,7 +46,7 @@ parser = argparse.ArgumentParser(
 parser.add_argument(
     "target_device",
     help="On which Spotify device should the song play (spotify id)",
-    choices=target_devices.keys() + ["null"],
+    choices=list(target_devices.keys()) + ["nullspot"],
 )
 
 parser.add_argument(

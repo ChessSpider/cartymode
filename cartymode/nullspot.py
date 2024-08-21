@@ -4,5 +4,5 @@ def start_playback():
 def pause_playback(): 
     print("pause fake playback")
 
-def seek_track(int foo):
+def seek_track(foo):
     print("Sake seek playback")
