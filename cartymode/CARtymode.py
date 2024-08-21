@@ -10,14 +10,12 @@ from config import (
 )
 
 import spotipy
-import sys
+import nullspot
 import datetime
 import time
 import keyboard
 import argparse
 import signal
-import requests
-import threading
 import logging
 
 logging.basicConfig(level=logging.INFO)
@@ -48,7 +46,7 @@ parser = argparse.ArgumentParser(
 parser.add_argument(
     "target_device",
     help="On which Spotify device should the song play (spotify id)",
-    choices=target_devices.keys(),
+    choices=target_devices.keys() + ["null"],
 )
 
 parser.add_argument(
@@ -108,32 +106,35 @@ except Exception as ex:
 
 LOG.debug("Used spotify token: {token}".format(token=token))
 
-sp = None
-while sp is None:
-    try:
-        sp = spotipy.Spotify(auth=token)
-        sp.current_user()
-    except spotipy.exceptions.SpotifyException:
-        print("Unable to authenticate to spotify")
-        token = input("Please input a valid Spotify authn token:")
-        sp = None
+if target_device == "nullspot":
+    sp = nullspot
+else:
+    sp = None
+    while sp is None:
+        try:
+            sp = spotipy.Spotify(auth=token)
+            sp.current_user()
+        except spotipy.exceptions.SpotifyException:
+            print("Unable to authenticate to spotify")
+            token = input("Please input a valid Spotify authn token:")
+            sp = None
 
-LOG.info(
-    "Waiting for {spotify_device} to appear".format(spotify_device=args.target_device)
-)
-device_found = False
-while not device_found:
-    for device in sp.devices()["devices"]:
-        LOG.debug(device)
-        if device["id"] == target_device:
-            # if not device["is_active"]:
-            #     print("Target device is not active! Retrying.. ")
-            #     continue
+    LOG.info(
+        "Waiting for {spotify_device} to appear".format(spotify_device=args.target_device)
+    )
+    device_found = False
+    while not device_found:
+        for device in sp.devices()["devices"]:
+            LOG.debug(device)
+            if device["id"] == target_device:
+                # if not device["is_active"]:
+                #     print("Target device is not active! Retrying.. ")
+                #     continue
 
-            device_found = True
-            break
-    time.sleep(0.5)
-LOG.info("Device found")
+                device_found = True
+                break
+        time.sleep(0.5)
+    LOG.info("Device found")
 
 started = True
 
