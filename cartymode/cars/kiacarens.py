@@ -1,3 +1,4 @@
+import os
 import can
 from can import Message
 import time
@@ -69,7 +70,7 @@ class kiacarens(Car):
                 extended_id=False,
             )
 
-        settings = open(configfilename, "r")
+        settings = open(os.path.dirname(__file__) + "/"+ configfilename, "r")
         for line in settings:
             (key, value) = line.split("=")
             items = key.split(".")  # index 1 = variable name, index 2 = on/off
