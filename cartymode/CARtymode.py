@@ -75,9 +75,6 @@ parser.add_argument(
 
 args = parser.parse_args()
 
-
-target_device = target_devices[args.target_device]
-
 car = None
 for c in Car.__subclasses__():
     if c.__name__ == args.car:
@@ -106,9 +103,10 @@ except Exception as ex:
 
 LOG.debug("Used spotify token: {token}".format(token=token))
 
-if target_device == "nullspot":
+if args.target_device == "nullspot":
     sp = nullspot
 else:
+    target_device = target_devices[args.target_device]
     sp = None
     while sp is None:
         try:
