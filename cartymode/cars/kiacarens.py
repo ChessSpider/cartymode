@@ -67,7 +67,7 @@ class kiacarens(Car):
             return can.Message(
                 arbitration_id=int(id.strip()[2:].encode(), base=16),
                 data=bytearray.fromhex(data.strip()[2:]),
-                extended_id=False,
+                is_extended_id=False,
             )
 
         settings = open(os.path.dirname(__file__) + "/"+ configfilename, "r")
