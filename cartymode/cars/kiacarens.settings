@@ -1,6 +1,5 @@
-bcm._basecmdmsg.0=       0x771 - 0x042FBC00000000000
+bcm._basecmdmsg.0=       0x771 - 0x042FBC0000000000
 bcm._recurringmsg.0=     0x771 - 0x023E000000000000
-
 bcm._startmsg.0=         0x771 - 0x0210030000000000
 bcm._stopmsg.0=          0x999 - 0x00
 light.centrebrake.on=    0x771 - 0x0000000000000000
