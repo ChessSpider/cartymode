@@ -9,6 +9,7 @@ from config import (
     target_devices,
 )
 
+print("Loading spotipy")
 import spotipy
 import nullspot
 import datetime
@@ -88,6 +89,7 @@ for s in Song.__subclasses__():
 ## dynamic config starts here
 token = None
 
+print("Connecting to spotify")
 try:
     token = spotipy.util.prompt_for_user_token(
         username,
