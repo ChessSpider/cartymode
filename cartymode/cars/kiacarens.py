@@ -10,36 +10,28 @@ from . import Car
 
 class kiacarens(Car):
     class light:
-        car = None
-        on = None
-        off = None
+    car = None
+    on = None
+    off = None
 
-        def __init__(self, car, on=None, off=None):
+    def __init__(self, car, on=None, off=None):
+        self.car = car
+        self.on = on
+        self.off = off
 
-            self.car = car
-            self.on = on
-            self.off = off
+    def turnon(self, sleep=0):
+        # Directly send the 'on' message
+        self.car._cmd = self.on
+        self.car.send()
+        if sleep > 0:
+            time.sleep(sleep)
 
-        @staticmethod
-        def mergecanmsg(a, b):
-            new = copy.deepcopy(a)
-            for i in range(len(new)):
-                new.data[i] |= b.data[i]
-            return new
-
-        def turnon(self, sleep=0):
-            self.car._cmd = self.mergecanmsg(self.car._cmd, self.on)
-            if sleep > 0:
-                self.car.send()
-                time.sleep(sleep)
-
-        def turnoff(self, sleep=0):
-            # First we figure out which bit is actually set off compared to the on comand
-            offbyte = bytes(a ^ b for (a, b) in zip(self.on.data, self.off.data))
-            # Then we need to get a bytearray which would only turnthat byte off
-            off = bytes(a ^ b for (a, b) in zip(offbyte, bytearray(b"\xFF" * 8)))
-            # Last but not least, we AND it to current command to make sure we only disable whats needed
-            newdata = bytes(a & b for (a, b) in zip(self.car._cmd.data, off))
+    def turnoff(self, sleep=0):
+        # Directly send the 'off' message
+        self.car._cmd = self.off
+        self.car.send()
+        if sleep > 0:
+            time.sleep(sleep)
 
             self.car._cmd.data = newdata
             if sleep > 0:
