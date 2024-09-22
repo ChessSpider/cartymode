@@ -9,8 +9,16 @@ from config import (
     target_devices,
 )
 
-print("Loading spotipy")
+print("                      __                            .___      ")
+print("  ____ _____ ________/  |_ ___.__. _____   ____   __| _/____  ")
+print("_/ ___| __  | _  __ \   __<   |  |/     \ /  _ \ / __ |/ __ \ ")
+print("\  \___ / __ \|  | \/|  |  \___  |  Y Y  (  <_> ) /_/ \  ___/ ")
+print(" \___  >____  /__|   |__|  / ____|__|_|  /\____/\____ |\___  >")
+print("     \/     \/             \/          \/            \/    \/ ")
+
+print("Importing spotipy")
 import spotipy
+print("Importing others")
 import nullspot
 import datetime
 import time
