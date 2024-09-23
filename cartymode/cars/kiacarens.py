@@ -10,32 +10,27 @@ from . import Car
 
 class kiacarens(Car):
     class light:
-    car = None
-    on = None
-    off = None
+        car = None
+        on = None
+        off = None
 
-    def __init__(self, car, on=None, off=None):
-        self.car = car
-        self.on = on
-        self.off = off
+        def __init__(self, car, on=None, off=None):
+            self.car = car
+            self.on = on
+            self.off = off
 
-    def turnon(self, sleep=0):
-        # Directly send the 'on' message
-        self.car._cmd = self.on
-        self.car.send()
-        if sleep > 0:
-            time.sleep(sleep)
-
-    def turnoff(self, sleep=0):
-        # Directly send the 'off' message
-        self.car._cmd = self.off
-        self.car.send()
-        if sleep > 0:
-            time.sleep(sleep)
-
-            self.car._cmd.data = newdata
+        def turnon(self, sleep=0):
+            # Directly send the 'on' message
+            self.car._cmd = self.on
+            self.car.send()
             if sleep > 0:
-                self.car.send()
+                time.sleep(sleep)
+
+        def turnoff(self, sleep=0):
+            # Directly send the 'off' message
+            self.car._cmd = self.off
+            self.car.send()
+            if sleep > 0:
                 time.sleep(sleep)
 
         def send(self):
