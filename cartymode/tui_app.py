@@ -56,13 +56,24 @@ logging.getLogger("cars").setLevel(logging.DEBUG)
 
 LOG = logging.getLogger(__name__)
 
+class TextualLogHandler(logging.Handler):
+    def __init__(self, rich_log_widget: RichLog):
+        super().__init__()
+        self.rich_log_widget = rich_log_widget
+
+    def emit(self, record: logging.LogRecord):
+        log_entry = self.format(record)
+        if self.rich_log_widget:
+            self.rich_log_widget.write(log_entry)  # Write log message to RichLog
+
+
 
 class LightShowApp(App):
     CSS_PATH = "app.css"  # You can define styles in this CSS file
     started = reactive(False)
-    song_thread : threading.Thread = None
-    car : Car | None = None
-    song : Song | None = None
+    song_thread = None
+    car = None
+    song = None
     sp = None
     token = None
     stop_event = threading.Event()
@@ -119,9 +130,19 @@ class LightShowApp(App):
         """Called when the app is mounted."""
         await self.initialize_app()
 
+        # Redirect Python logging to RichLog
+        textual_log_handler = TextualLogHandler(self.rich_log)
+        textual_log_handler.setLevel(logging.DEBUG)
+        textual_log_handler.setFormatter(logging.Formatter("%(asctime)s - %(levelname)s - %(message)s"))
+
+        # Add the handler to all loggers
+        logging.getLogger().addHandler(textual_log_handler)  # Root logger
+        #logging.getLogger("songs").addHandler(textual_log_handler)  # Songs module
+        #logging.getLogger("cars").addHandler(textual_log_handler)  # Cars module
+
     async def initialize_app(self):
         """Initialize Spotify connection."""
-        self.log_message("Initializing Spotify connection...")
+        LOG.info("Initializing Spotify connection...")
         try:
             self.token = spotipy.util.prompt_for_user_token(
                 username,
@@ -136,32 +157,27 @@ class LightShowApp(App):
 
         LOG.debug(f"Used Spotify token: {self.token}")
 
-    def log_message(self, message: str):
-        """Log a message to the RichLog widget."""
-        LOG.info(message)
-        self.rich_log.write(message)
-
     async def action_start_light_show(self):
         """Start the light show."""
         song_name = self.song_select.value
         car_name = self.car_select.value
         device_name = self.device_select.value
 
-        self.log_message(f"Selected song: {song_name}")
-        self.log_message(f"Selected car: {car_name}")
-        self.log_message(f"Selected device: {device_name}")
+        LOG.info(f"Selected song: {song_name}")
+        LOG.info(f"Selected car: {car_name}")
+        LOG.info(f"Selected device: {device_name}")
 
         # Initialize car
         for c in Car.__subclasses__():
             if c.__name__ == car_name:
                 self.car = c()
-                self.log_message(f"Initialized car: {car_name}")
+                LOG.info(f"Initialized car: {car_name}")
 
         # Initialize song
         for s in Song.__subclasses__():
             if s.__name__ == song_name:
                 self.song = s(self.car)
-                self.log_message(f"Initialized song: {song_name}")
+                LOG.info(f"Initialized song: {song_name}")
 
         # Initialize Spotify device
         if device_name == "nullspot":
@@ -174,11 +190,11 @@ class LightShowApp(App):
                     self.sp = spotipy.Spotify(auth=self.token)
                     self.sp.current_user()
                 except spotipy.exceptions.SpotifyException:
-                    self.log_message("Unable to authenticate to Spotify")
+                    LOG.info("Unable to authenticate to Spotify")
                     self.token = input("Please input a valid Spotify auth token:")
                     self.sp = None
 
-            self.log_message(f"Waiting for Spotify device {device_name} to appear...")
+            LOG.info(f"Waiting for Spotify device {device_name} to appear...")
             device_found = False
             while not device_found:
                 for device in self.sp.devices()["devices"]:
@@ -187,11 +203,11 @@ class LightShowApp(App):
                         device_found = True
                         break
                 time.sleep(0.5)
-            self.log_message("Spotify device found.")
+            LOG.info("Spotify device found.")
 
         # Start the car
         self.car.start()
-        self.log_message("Car started.")
+        LOG.info("Car started.")
 
         # Start the song and light show in a separate thread
         self.started = True
@@ -207,18 +223,18 @@ class LightShowApp(App):
         self.foobar = datetime.datetime.now()
         self.print_timestamp()
 
-        self.log_message("Waiting for the song to finish...")
+        LOG.info("Waiting for the song to finish...")
 
         self.song.start(self.sp, self.target_device_id, offset=self.song_offset)
-        time.sleep(1)
         while self.song.wait(timeout=1):
             if not self.started:
-                self.log_message("Stopping light show prematurely.")
+                LOG.info("Stopping light show prematurely.")
                 self.song.stop()
                 break
-        time.sleep(0.5)
+
+        time.sleep(3)
         self.started = False
-        self.log_message("Light show finished.")
+        LOG.info("Light show finished.")
         self.song.stop()
         self.car.stop()
         self.status_label.update("Light show stopped.")
@@ -234,7 +250,7 @@ class LightShowApp(App):
             seconds=float(self.song_offset.split(":")[1]),
         )
         minutes, seconds = divmod(time_passed.total_seconds(), 60)
-        self.log_message(
+        LOG.info(
             "{minutes:02d}:{seconds:06.3f} - Light show started.".format(
                 minutes=int(minutes), seconds=seconds
             )
@@ -245,7 +261,7 @@ class LightShowApp(App):
         if self.started:
             self.started = False
             self.status_label.update("Stopping light show...")
-            self.log_message("Stopping light show...")
+            LOG.info("Stopping light show...")
             self.song.stop()
             self.car.stop()
             if self.song_thread and self.song_thread.is_alive():
@@ -276,7 +292,7 @@ class LightShowApp(App):
             self.car.stop()
             if self.song_thread and self.song_thread.is_alive():
                 self.song_thread.join()
-            self.log_message("Application exited.")
+            LOG.info("Application exited.")
 
     def action_quit(self) -> None:
         """Quit the application."""
@@ -289,13 +305,13 @@ class LightShowApp(App):
         self.device_select.value = None
         self.status_label.update("Welcome to the Light Show App!")
         self.rich_log.clear()
-        self.log_message("Application reset.")
+        LOG.info("Application reset.")
 
     async def action_reload(self) -> None:
         """Reload the application."""
         await self.action_stop_light_show()
         await self.initialize_app()
-        self.log_message("Application reloaded.")
+        LOG.info("Application reloaded.")
 
 
 if __name__ == "__main__":
