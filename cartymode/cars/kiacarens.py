@@ -184,7 +184,7 @@ class kiacarens(Car):
         while self.started:
             for controlmessage in self._controlmsgs:
                 self.can.send(controlmessage)
-                time.sleep(0.01)  # delay between contrl message salvo (checked)
+                time.sleep(0.1)  # delay between contrl message salvo (checked)
             time.sleep(0.2)  # delay between salvo (checked)
 
     def send(self):
