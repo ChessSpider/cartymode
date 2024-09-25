@@ -115,22 +115,24 @@ class kiacarens(Car):
     licenseplate = None
 
     def turnsignalson(self, sleep=0):
-        self.leftsignal.turnon()
-        self.rightsignal.turnon(sleep)
+        #self.leftsignal.turnon()
+        #self.rightsignal.turnon()
+        self.parklight.turnon() #Parklights instead of blinkers
         if sleep:
             time.sleep()
 
     def turnsignalsoff(self, sleep=0):
-        self.leftsignal.turnoff()
-        self.rightsignal.turnoff()
+        #self.leftsignal.turnoff()
+        #self.rightsignal.turnoff()
+        self.parklight.turnoff()
         if sleep:
             time.sleep(sleep)
 
     def turnallthelightson(self, sleep=0):
         self.highbeam.turnon()
         self.lowbeam.turnon()
-        self.leftsignal.turnon()
-        self.rightsignal.turnon()
+        #self.leftsignal.turnon()
+        #self.rightsignal.turnon()
         self.frontfog.turnon()
         self.parklight.turnon()
         if sleep:
@@ -139,8 +141,8 @@ class kiacarens(Car):
     def turnallthelightsoff(self, sleep=0):
         self.highbeam.turnoff()
         self.lowbeam.turnoff()
-        self.leftsignal.turnoff()
-        self.rightsignal.turnoff()
+        #self.leftsignal.turnoff()
+        #self.rightsignal.turnoff()
         self.frontfog.turnoff()
         self.parklight.turnoff()
         if sleep:
