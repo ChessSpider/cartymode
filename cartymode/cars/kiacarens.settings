@@ -20,5 +20,5 @@ light.parklight.on=      0x771 - 0x042FBC0403000000
 light.parklight.off=     0x771 - 0x042FBC0400000000
 light.rearfog.on=        0x771 - 0x042FBC0803000000
 light.rearfog.off=       0x771 - 0x042FBC0800000000
-light.reverse.on=        0x771 - 0x042FBC0403000000
-light.reverse.off=       0x771 - 0x042FBC0400000000    
+light.reverse.on=        0x771 - 0x0000000000000000
+light.reverse.off=       0x771 - 0x0000000000000000    
