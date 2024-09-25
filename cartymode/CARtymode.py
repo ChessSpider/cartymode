@@ -144,6 +144,7 @@ else:
         time.sleep(0.5)
     LOG.info("Device found")
 
+input("Press any key to continue...")
 started = True
 
 
