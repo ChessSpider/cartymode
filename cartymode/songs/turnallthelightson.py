@@ -8,6 +8,7 @@ class turnallthelightson(Song):
     car = None
 
     def __init__(self, car):
+        super().__init__()
         self.car = car
 
     def return_actions(self):

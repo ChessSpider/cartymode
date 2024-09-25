@@ -1,0 +1,23 @@
+/* app.css */
+#controls {
+    padding: 1;
+    border: round #666666;
+}
+
+#log {
+    border: round #666666;
+    height: 70%;
+    overflow: auto;
+}
+
+#status_label {
+    padding: 1;
+}
+
+Select {
+    padding: 1;
+}
+
+Button {
+    margin: 1;
+}

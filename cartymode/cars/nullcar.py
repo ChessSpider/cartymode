@@ -9,12 +9,32 @@ class nullcar(Car):
     doesnt do anything at all
     """
 
-    highbeam = None
-    lowbeam = None
-    leftsignal = None
-    rightsignal = None
-    frontfog = None
-    parklight = None
+    class fakelight:
+        def turnon(self,sleep=0):
+            if sleep > 0:
+                time.sleep(sleep)
+
+        def turnoff(self):
+            pass
+
+        def send(self):
+            pass
+
+    # front of car
+    highbeam = fakelight()
+    lowbeam = fakelight()
+    frontfog = fakelight()
+
+    # side of car
+    leftsignal = fakelight()
+    rightsignal = fakelight()
+
+    # rear of car
+    centrebrake = fakelight()
+    parklight = fakelight()
+    rearfog = fakelight()
+    reverse = fakelight()
+    licenseplate = fakelight()
 
     def __init__(self, output_device=None):
 

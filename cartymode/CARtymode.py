@@ -186,12 +186,17 @@ if args.watch_keyboard:
 
 
 car.start()
+
 while started:
     lightshow = song.start(sp, target_device, offset=song_offset)
     foobar = datetime.datetime.now()
     printtimestamp()
     LOG.info("Waiting song to finish")
-    lightshow.join()
+    while song.wait(timeout=1):  # Wait for the song to finish with a 1-second timeout
+        if not started:
+            LOG.info("Stopping lightshow prematurely")
+            song.stop()  # Call the stop method to stop the lightshow
+            break
     time.sleep(3)
     started = False
 

@@ -62,6 +62,10 @@ class Song(object):
     spotify_id = ""
     car = None
 
+    def __init__(self):
+        self.stop_event = threading.Event()
+        self.thread = None
+
     def timeseries(
         self,
         starttime="00:00.000",
@@ -127,13 +131,19 @@ class Song(object):
             LOG.debug(ta)
             ta()
             try:
+                if self.stop_event.is_set():
+                    LOG.info("Lightshow interrupted during sleep.")
+                    break
+
                 sleepfor = actionlist[i + 1] - ta
-                #    print("Sleeping for %f" % sleepfor.total_seconds())
+                LOG.info("Sleeping for %f" % sleepfor.total_seconds())
                 time.sleep(sleepfor.total_seconds())
             except IndexError:
                 LOG.info("End of commands")
 
     def start(self, spotify, target_device, offset="00:00.000"):
+        self.stop_event.clear()  # Reset the stop event when starting
+
         skip_ms = 0
         if offset != "00:00.000":
             # calculate millisecond offset for spotify
@@ -144,7 +154,7 @@ class Song(object):
             skip_ms += int(minutes) * 60 * 1000
             LOG.info(f"Skipping {skip_ms}ms ")
 
-        th = threading.Thread(target=self.play_sequence, kwargs={"offset": offset})
+        self.thread = threading.Thread(target=self.play_sequence, kwargs={"offset": offset})
         spotify.start_playback(
             uris=[self.spotify_id],
             device_id=target_device,
@@ -153,5 +163,27 @@ class Song(object):
         spotify.seek_track(skip_ms)
         LOG.info("Starting playback..")
         spotify.start_playback()
-        th.start()
-        return th
+        self.thread.start()
+        return self.thread
+    
+
+    def stop(self):
+        if self.thread and self.thread.is_alive():
+            LOG.info("Stopping lightshow.")
+            self.stop_event.set()  # Signal the thread to stop
+            self.thread.join()  # Wait for the thread to finish
+            LOG.info("Lightshow stopped.")
+
+    def wait(self, timeout: int = 1) -> bool:
+        """Wait for the lightshow to finish with a non-blocking timeout.
+
+        Args:
+            timeout (int): Time in seconds to wait before checking again. 0 = wait indefinitely 
+
+        Returns:
+            bool: True if the lightshow is still running, False if finished.
+        """
+        if self.thread.is_alive():
+            self.thread.join(timeout=timeout)  # Non-blocking join with timeout
+            return self.thread.is_alive()  # Return if thread is still alive
+        return False  # Thread is not running
