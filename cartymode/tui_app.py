@@ -42,6 +42,7 @@ from songs.turnallthelightson import turnallthelightson
 from songs.caramelldansen import caramelldansen
 from songs.unite import unite
 from songs.europapa import europapa
+from songs.continuous import continuous
 
 from cars.corsa import corsa
 from cars.kiacarens import kiacarens
